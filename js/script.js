@@ -215,3 +215,206 @@ function clicked(element) {
   playMusic();
   playingNow();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+const global = {
+  api: {
+    apiKey: "693d0c8dcfmsheeda56caef363fbp1545a1jsn5417f7af0e09",
+    spotifyHost: "spotify23.p.rapidapi.com",
+    geniusHost: "genius-song-lyrics1.p.rapidapi.com",
+  },
+};
+function initializeTabs() {
+  const defaultTabIndex = 0;
+  showTab(defaultTabIndex);
+}
+function showTab(tabIndex) {
+  const tabPanels = document.querySelectorAll(".tab-panel");
+  const tabs = document.querySelectorAll(".tab");
+
+  // Check if the provided tabIndex is within the valid range
+  if (tabIndex >= 0 && tabIndex < tabPanels.length) {
+    // hide all tabs
+    for (let i = 0; i < tabPanels.length; i++) {
+      tabPanels[i].classList.remove("active");
+      tabs[i].classList.remove("active");
+    }
+
+    // show the selected tab content
+    tabPanels[tabIndex].classList.add("active");
+    tabs[tabIndex].classList.add("active");
+    // Call the specific functions for each tab index
+    switch (tabIndex) {
+      case 0:
+        displayLyrics();
+        break;
+      case 1:
+        displayAlbum();
+        break;
+      case 2:
+        displayRelatedArtist();
+        break;
+      // Add more cases as needed for other tabs
+      default:
+        // Do nothing or handle any other cases if needed
+        break;
+    }
+  }
+}
+// Call the function to set the initial active state on page load
+initializeTabs();
+
+// fetch api lyrics
+async function fetchAPILyrics() {
+  const url =
+    "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/?id=7076626";
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": global.api.apiKey,
+      "X-RapidAPI-Host": global.api.geniusHost,
+    },
+  };
+  const response = await fetch(url, options);
+  const data = await response.json();
+  // console.log(data);
+  return data;
+}
+function removeUnderlinesAndLinks(html) {
+  // Remove underlines from anchor tags
+  html = html.replace(/<a[^>]*>/g, "<a>");
+
+  // Remove the 'href' attribute from anchor tags
+  html = html.replace(/<a\s+[^>]*href="([^"]*)"[^>]*>/gi, "<a>");
+
+  return html;
+}
+
+async function displayLyrics() {
+  const data = await fetchAPILyrics();
+  // console.log(data.lyrics.lyrics.body);
+  const lyricsBody = data.lyrics.lyrics.body.html;
+  // Remove <u> and <a> tags from the lyrics
+  const cleanedLyrics = lyricsBody
+    .replace(/<\/?u>/g, "")
+    .replace(/<\/?a[^>]*>/g, "");
+  // console.log(cleanedLyrics);
+  // Display cleaned lyrics on the webpage
+  document.querySelector("#tab1").innerHTML = cleanedLyrics;
+}
+
+// displayLyrics();
+
+async function getAlbumsSpotify() {
+  const url =
+    "https://spotify23.p.rapidapi.com/artist_albums/?id=06HL4z0CvFAxyc27GXpf02&offset=0&limit=100";
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": global.api.apiKey,
+      "X-RapidAPI-Host": global.api.spotifyHost,
+    },
+  };
+  const response = await fetch(url, options);
+  const data = await response.json();
+  // console.log(data);
+  return data;
+}
+async function displayAlbum() {
+  try {
+    const { data } = await getAlbumsSpotify();
+    const albums = data.artist.discography.albums.items;
+    // console.log(albums);
+    const swiperWrapper = document.querySelector("#tab2 .swiper-wrapper");
+    swiperWrapper.innerHTML = "";
+    albums.forEach((album) => {
+      const albumName = album.releases.items[0].name;
+      const albumLink = album.releases.items[0].sharingInfo.shareUrl;
+      const albumYear = album.releases.items[0].date.year;
+      const albumImg = album.releases.items[0].coverArt.sources[0].url;
+      // console.log(albumName);
+      // console.log(albumImg);
+
+      const div = document.createElement("div");
+      div.classList.add("swiper-slide");
+      div.innerHTML = `
+               <a href="${albumLink}" target="_blank">
+                 <img src="${albumImg}" alt="${albumName}" />
+               </a>
+               <div class="album-name">
+                  <h4>${albumName}</h4>
+                  <p>${albumYear}</p>
+               </div>
+  `;
+      swiperWrapper.appendChild(div);
+    });
+    const swiper = new Swiper(".swiper", {
+      loopedSlides: 8,
+      spaceBetween: 25,
+      slidesPerView: "auto",
+      freeMode: true,
+      mousewheel: {
+        releaseOnEdges: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching albums data:", error);
+  }
+}
+// displayAlbum();
+async function getRelatedArtist() {
+  const url =
+    "https://spotify23.p.rapidapi.com/artist_related/?id=2w9zwq3AktTeYYMuhMjju8";
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": global.api.apiKey,
+      "X-RapidAPI-Host": global.api.spotifyHost,
+    },
+  };
+  const response = await fetch(url, options);
+  const data = await response.json();
+  // console.log(data.artists);
+  return data;
+}
+// getRelatedArtist();
+async function displayRelatedArtist() {
+  const data = await getRelatedArtist();
+  const artists = data.artists;
+  // console.log(data.artists);
+  const swiperWrapper = document.querySelector("#tab3 .swiper-wrapper");
+  swiperWrapper.innerHTML = "";
+  artists.forEach((artist) => {
+    console.log(artist.name);
+    const artistName = artist.name;
+    const artistLink = artist.external_urls.spotify;
+    const artistImg = artist.images[0].url;
+    const div = document.createElement("div");
+    div.classList.add("swiper-slide");
+    div.innerHTML = `
+    
+    <a href="${artistLink}" target="_blank">
+    <img src="${artistImg}" alt="${artistName}" />
+    </a> 
+                 <div class="album-name">
+                    <h4>${artistName}</h4>
+
+                 </div>
+    `;
+    swiperWrapper.appendChild(div);
+  });
+  const swiper = new Swiper(".swiper", {
+    loopedSlides: 8,
+    spaceBetween: 25,
+    slidesPerView: "auto",
+    freeMode: true,
+    mousewheel: {
+      releaseOnEdges: true,
+    },
+  });
+}
+//
+
+/* <a href="${artistLink}" target="_blank">
+<img src="${artistImg}" alt="${artistName}" />
+</a> */

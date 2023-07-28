@@ -8,61 +8,110 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="lib/swiper.css" />
+    <link rel="stylesheet" href="lib/fontawesome.css" />
     <link rel="stylesheet" href="./css/styles.css" />
+    <script src="lib/swiper.js"></script>
   </head>
   <body>
     <div id="wrapper">
-      <div class="player">
-        <div class="image-container">
-          <div class="img-area">
-            <div class="albumImg">
-              <img src="img/music1.png" alt="" />
-            </div>
-            <div class="vinyl">
-              <img src="img/vinyl.png" alt="" />
-            </div>
-          </div>
-        </div>
-        <div class="song-details">
-          <p class="title"></p>
-          <p class="artist"></p>
-        </div>
-        <div class="progress-area">
-          <div class="progress-bar"></div>
-          <div class="timer">
-            <span class="current">0:00</span>
-            <span class="duration"></span>
-          </div>
-          <audio id="main-audio" src=""></audio>
-        </div>
-        <div class="controls">
-          <i id="repeat-plist" class="material-icons" title="Playist looped"
-            >repeat</i
-          >
-          <i id="prev" class="material-icons">skip_previous</i>
-          <div class="play-pause">
-            <i class="material-icons">play_arrow</i>
-          </div>
-          <i id="next" class="material-icons">skip_next</i>
-          <i id="more-music" class="material-icons">queue_music</i>
-        </div>
-        <div class="music-list">
-          <div class="header">
-            <div class="row">
-              <i class="material-icons">queue_music</i>
-              <span>Music list</span>
-            </div>
-            <i id="close" class="material-icons">close</i>
-          </div>
-          <ul>
-            <!-- <li>
-              <div class="row">
-                <span>Tijuana Sunrise - Goldfinger</span>
-                <p>Audio Library</p>
+      <div class="container">
+        <div class="player-container">
+          <div class="player">
+            <div class="image-container">
+              <div class="img-area">
+                <div class="albumImg">
+                  <img src="img/music1.png" alt="" />
+                </div>
+                <div class="vinyl">
+                  <img src="img/vinyl.png" alt="" />
+                </div>
               </div>
-              <span class="audio-duration">3:38</span>
-            </li> -->
-          </ul>
+            </div>
+            <div class="song-details">
+              <p class="title"></p>
+              <p class="artist"></p>
+            </div>
+            <div class="progress-area">
+              <div class="progress-bar"></div>
+              <div class="timer">
+                <span class="current">0:00</span>
+                <span class="duration"></span>
+              </div>
+              <audio id="main-audio" src=""></audio>
+            </div>
+            <div class="controls">
+              <i id="repeat-plist" class="material-icons" title="Playist looped"
+                >repeat</i
+              >
+              <i id="prev" class="material-icons">skip_previous</i>
+              <div class="play-pause">
+                <i class="material-icons">play_arrow</i>
+              </div>
+              <i id="next" class="material-icons">skip_next</i>
+              <i id="more-music" class="material-icons">queue_music</i>
+            </div>
+            <div class="music-list">
+              <div class="header">
+                <div class="row">
+                  <i class="material-icons">queue_music</i>
+                  <span>Music list</span>
+                </div>
+                <i id="close" class="material-icons">close</i>
+              </div>
+              <ul>
+                <!-- <li>
+                                <div class="row">
+                                  <span>Tijuana Sunrise - Goldfinger</span>
+                                  <p>Audio Library</p>
+                                </div>
+                                <span class="audio-duration">3:38</span>
+                              </li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="explore-container">
+          <div class="tab-container">
+            <h1>Explore</h1>
+            <div class="button-container">
+              <button class="tab" onclick="showTab(0)">Lyrics</button>
+              <button class="tab" onclick="showTab(1)">Other Albums</button>
+              <button class="tab" onclick="showTab(2)">Related Artist</button>
+            </div>
+            <div class="tab-panel" id="tab1"></div>
+            <div class="tab-panel" id="tab2">
+              <div class="swiper">
+                <div class="swiper-wrapper">
+                  <!-- <div class="swiper-slide">
+                    <a href="#">
+                      <img src="./img/music-1.png" alt="Album Title" />
+                    </a>
+                    <div class="album-name">
+                      <h4>Taylor Swift</h4>
+                      <p>asd</p>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+            <div class="tab-panel" id="tab3">
+              <div class="swiper">
+                <div class="swiper-wrapper">
+                  <!-- <div class="swiper-slide">
+                    <a href="#">
+                      <img src="./img/music-1.png" alt="Album Title" />
+                    </a>
+                    <div class="album-name">
+                      <h4>Taylor Swift</h4>
+                      <p>asd</p>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
